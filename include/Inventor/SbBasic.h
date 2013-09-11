@@ -33,6 +33,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 \**************************************************************************/
 
+#include <Inventor/C/errors/debugerror.h>
 #include <Inventor/C/basic.h>
 
 /* ********************************************************************** */
