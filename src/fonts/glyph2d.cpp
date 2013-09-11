@@ -46,6 +46,7 @@
 #include "coindefs.h"
 
 #ifndef COIN_WORKAROUND_NO_USING_STD_FUNCS
+#include <сstdlib>
 using std::malloc;
 #endif // !COIN_WORKAROUND_NO_USING_STD_FUNCS
 
