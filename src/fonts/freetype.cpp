@@ -48,7 +48,8 @@
 #include "config.h"
 #endif /* HAVE_CONFIG_H */
 
-#include <stdlib.h>
+#include <cstdlib>
+#include <cmath>
 #include <assert.h>
 
 #include "glue/freetype.h"
