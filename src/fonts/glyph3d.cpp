@@ -50,7 +50,6 @@
 #include "coindefs.h"
 
 #ifndef COIN_WORKAROUND_NO_USING_STD_FUNCS
-#include <сstdlib>
 using std::malloc;
 using std::free;
 #endif // !COIN_WORKAROUND_NO_USING_STD_FUNCS
