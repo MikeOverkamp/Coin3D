@@ -130,7 +130,7 @@ cc_thread_join(cc_thread * thread,
 void
 cc_sleep(float seconds)
 {
-#ifndef _WIN32
+#if !defined(_WIN32) || defined(__MINGW32__)
   /* FIXME: 20011107, thammer: create a configure macro to detect
    * which sleep function is available */
   sleep(floor(seconds));
