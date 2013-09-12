@@ -135,14 +135,10 @@ BuildSources = $(RegularSources)
 ExtraSources = $(LinkHackSources)
 endif
 
-if BUILD_WITH_MSVC
-noinst_LIBRARIES = fields.lst
-else
 if HACKING_DYNAMIC_MODULES
 lib_LTLIBRARIES = libfields@SUFFIX@LINKHACK.la
 else
 noinst_LTLIBRARIES = libfields.la
-endif
 endif
 
 # Remove any linklibraries detected by configure, as they are not
@@ -168,16 +164,6 @@ EXTRA_libfields_la_SOURCES = \
 libfields@SUFFIX@LINKHACK_la_SOURCES = $(BuildSources)
 EXTRA_libfields@SUFFIX@LINKHACK_la_SOURCES = \
 	$(PublicHeaders) $(PrivateHeaders) $(ExtraSources)
-
-fields_lst_SOURCES = $(BuildSources)
-EXTRA_fields_lst_SOURCES = \
-	$(PublicHeaders) $(PrivateHeaders) $(ExtraSources)
-
-# this rule causes a make warning, so we remove it when it is not in use
-fields.lst: Makefile $(fields_lst_OBJECTS)
-	@echo "Linking fields.lst..."; \
-	rm -f $@; touch $@; \
-	for i in $(fields_lst_OBJECTS); do echo $$i >>$@; done
 
 install-libfieldsincHEADERS: $(libfieldsinc_HEADERS)
 	@$(NORMAL_INSTALL)

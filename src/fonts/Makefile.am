@@ -66,14 +66,10 @@ BuildSources = $(RegularSources)
 ExtraSources = $(LinkHackSources)
 endif
 
-if BUILD_WITH_MSVC
-noinst_LIBRARIES = fonts.lst
-else
 if HACKING_DYNAMIC_MODULES
 lib_LTLIBRARIES = libfonts@SUFFIX@LINKHACK.la
 else
 noinst_LTLIBRARIES = libfonts.la
-endif
 endif
 
 # Remove any linklibraries detected by configure, as they are not
@@ -99,16 +95,6 @@ EXTRA_libfonts_la_SOURCES = \
 libfonts@SUFFIX@LINKHACK_la_SOURCES = $(BuildSources)
 EXTRA_libfonts@SUFFIX@LINKHACK_la_SOURCES = \
 	$(PublicHeaders) $(PrivateHeaders) $(ExtraSources)
-
-fonts_lst_SOURCES = $(BuildSources)
-EXTRA_fonts_lst_SOURCES = \
-	$(PublicHeaders) $(PrivateHeaders) $(ExtraSources)
-
-# this rule causes a make warning, so we remove it when it is not in use
-fonts.lst: Makefile $(fonts_lst_OBJECTS)
-	@echo "Linking fonts.lst..."; \
-	rm -f $@; touch $@; \
-	for i in $(fonts_lst_OBJECTS); do echo $$i >>$@; done
 
 install-libfontsincHEADERS: $(libfontsinc_HEADERS)
 	@$(NORMAL_INSTALL)

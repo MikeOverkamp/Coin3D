@@ -51,14 +51,10 @@ BuildSources = $(RegularSources)
 ExtraSources = $(LinkHackSources)
 endif
 
-if BUILD_WITH_MSVC
-noinst_LIBRARIES = profiler.lst
-else
 if HACKING_DYNAMIC_MODULES
 lib_LTLIBRARIES = libprofiler@SUFFIX@LINKHACK.la
 else
 noinst_LTLIBRARIES = libprofiler.la
-endif
 endif
 
 # Remove any linklibraries detected by configure, as they are not
@@ -84,16 +80,6 @@ EXTRA_libprofiler_la_SOURCES = \
 libprofiler@SUFFIX@LINKHACK_la_SOURCES = $(BuildSources)
 EXTRA_libprofiler@SUFFIX@LINKHACK_la_SOURCES = \
 	$(PublicHeaders) $(PrivateHeaders) $(ExtraSources)
-
-profiler_lst_SOURCES = $(BuildSources)
-EXTRA_profiler_lst_SOURCES = \
-	$(PublicHeaders) $(PrivateHeaders) $(ExtraSources)
-
-# this rule causes a make warning, so we remove it when it is not in use
-profiler.lst: Makefile $(profiler_lst_OBJECTS)
-	@echo "Linking profiler.lst..."; \
-	rm -f $@; touch $@; \
-	for i in $(profiler_lst_OBJECTS); do echo $$i >>$@; done
 
 install-libprofilerincHEADERS: $(libprofilerinc_HEADERS)
 	@$(NORMAL_INSTALL)

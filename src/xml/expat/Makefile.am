@@ -50,14 +50,10 @@ DISTCLEANFILES = \
 BuildSources = $(LinkHackSources)
 ExtraSources = $(RegularSources)
 
-if BUILD_WITH_MSVC
-noinst_LIBRARIES = expat.lst
-else
 if HACKING_DYNAMIC_MODULES
 lib_LTLIBRARIES = libexpat@SUFFIX@LINKHACK.la
 else
 noinst_LTLIBRARIES = libexpat.la
-endif
 endif
 
 # Remove any linklibraries detected by configure, as they are not
@@ -83,16 +79,6 @@ EXTRA_libexpat_la_SOURCES = \
 libexpat@SUFFIX@LINKHACK_la_SOURCES = $(BuildSources)
 EXTRA_libexpat@SUFFIX@LINKHACK_la_SOURCES = \
 	$(PublicHeaders) $(PrivateHeaders) $(ExtraSources)
-
-expat_lst_SOURCES = $(BuildSources)
-EXTRA_expat_lst_SOURCES = \
-	$(PublicHeaders) $(PrivateHeaders) $(ExtraSources)
-
-# this rule causes a make warning, so we remove it when it is not in use
-expat.lst: Makefile $(expat_lst_OBJECTS)
-	@echo "Linking expat.lst..."; \
-	rm -f $@; touch $@; \
-	for i in $(expat_lst_OBJECTS); do echo $$i >>$@; done
 
 install-libexpatincHEADERS: $(libexpatinc_HEADERS)
 	@$(NORMAL_INSTALL)

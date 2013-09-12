@@ -108,14 +108,10 @@ BuildSources = $(RegularSources)
 ExtraSources = $(LinkHackSources)
 endif
 
-if BUILD_WITH_MSVC
-noinst_LIBRARIES = scxml.lst
-else
 if HACKING_DYNAMIC_MODULES
 lib_LTLIBRARIES = libscxml@SUFFIX@LINKHACK.la
 else
 noinst_LTLIBRARIES = libscxml.la
-endif
 endif
 
 # Remove any linklibraries detected by configure, as they are not
@@ -141,16 +137,6 @@ EXTRA_libscxml_la_SOURCES = \
 libscxml@SUFFIX@LINKHACK_la_SOURCES = $(BuildSources)
 EXTRA_libscxml@SUFFIX@LINKHACK_la_SOURCES = \
 	$(PublicHeaders) $(PrivateHeaders) $(ExtraSources)
-
-scxml_lst_SOURCES = $(BuildSources)
-EXTRA_scxml_lst_SOURCES = \
-	$(PublicHeaders) $(PrivateHeaders) $(ExtraSources)
-
-# this rule causes a make warning, so we remove it when it is not in use
-scxml.lst: Makefile $(scxml_lst_OBJECTS)
-	@echo "Linking scxml.lst..."; \
-	rm -f $@; touch $@; \
-	for i in $(scxml_lst_OBJECTS); do echo $$i >>$@; done
 
 install-libscxmlincHEADERS: $(libscxmlinc_HEADERS)
 	@$(NORMAL_INSTALL)

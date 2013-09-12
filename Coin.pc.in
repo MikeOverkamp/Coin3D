@@ -18,7 +18,6 @@ compiler=@COIN_COMPILER@
 compiler_is_gcc=@ac_compiler_gnu@
 frameworkdir=@frameworkdir@
 htmldir=@htmldir@
-msvcrt=@COIN_MSVC_LIBC@
 objext=@OBJEXT@
 
 have_3ds_import=@HAVE_3DS_IMPORT_CAPABILITIES@

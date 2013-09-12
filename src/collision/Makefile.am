@@ -37,14 +37,10 @@ BuildSources = $(RegularSources)
 ExtraSources = $(LinkHackSources)
 endif
 
-if BUILD_WITH_MSVC
-noinst_LIBRARIES = collision.lst
-else
 if HACKING_DYNAMIC_MODULES
 lib_LTLIBRARIES = libcollision@SUFFIX@LINKHACK.la
 else
 noinst_LTLIBRARIES = libcollision.la
-endif
 endif
 
 # Remove any linklibraries detected by configure, as they are not
@@ -70,16 +66,6 @@ EXTRA_libcollision_la_SOURCES = \
 libcollision@SUFFIX@LINKHACK_la_SOURCES = $(BuildSources)
 EXTRA_libcollision@SUFFIX@LINKHACK_la_SOURCES = \
 	$(PublicHeaders) $(PrivateHeaders) $(ExtraSources)
-
-collision_lst_SOURCES = $(BuildSources)
-EXTRA_collision_lst_SOURCES = \
-	$(PublicHeaders) $(PrivateHeaders) $(ExtraSources)
-
-# this rule causes a make warning, so we remove it when it is not in use
-collision.lst: Makefile $(collision_lst_OBJECTS)
-	@echo "Linking collision.lst..."; \
-	rm -f $@; touch $@; \
-	for i in $(collision_lst_OBJECTS); do echo $$i >>$@; done
 
 install-libcollisionincHEADERS: $(libcollisioninc_HEADERS)
 	@$(NORMAL_INSTALL)

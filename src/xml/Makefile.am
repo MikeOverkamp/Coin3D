@@ -45,14 +45,10 @@ BuildSources = $(RegularSources)
 ExtraSources = $(LinkHackSources)
 endif
 
-if BUILD_WITH_MSVC
-noinst_LIBRARIES = xml.lst
-else
 if HACKING_DYNAMIC_MODULES
 lib_LTLIBRARIES = libxml@SUFFIX@LINKHACK.la
 else
 noinst_LTLIBRARIES = libxml.la
-endif
 endif
 
 # Remove any linklibraries detected by configure, as they are not
@@ -78,16 +74,6 @@ EXTRA_libxml_la_SOURCES = \
 libxml@SUFFIX@LINKHACK_la_SOURCES = $(BuildSources)
 EXTRA_libxml@SUFFIX@LINKHACK_la_SOURCES = \
 	$(PublicHeaders) $(PrivateHeaders) $(ExtraSources)
-
-xml_lst_SOURCES = $(BuildSources)
-EXTRA_xml_lst_SOURCES = \
-	$(PublicHeaders) $(PrivateHeaders) $(ExtraSources)
-
-# this rule causes a make warning, so we remove it when it is not in use
-xml.lst: Makefile $(xml_lst_OBJECTS)
-	@echo "Linking xml.lst..."; \
-	rm -f $@; touch $@; \
-	for i in $(xml_lst_OBJECTS); do echo $$i >>$@; done
 
 install-libxmlincHEADERS: $(libxmlinc_HEADERS)
 	@$(NORMAL_INSTALL)

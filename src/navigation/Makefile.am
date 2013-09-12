@@ -62,14 +62,10 @@ BuildSources = $(RegularSources)
 ExtraSources = $(LinkHackSources)
 endif
 
-if BUILD_WITH_MSVC
-noinst_LIBRARIES = navigation.lst
-else
 if HACKING_DYNAMIC_MODULES
 lib_LTLIBRARIES = libnavigation@SUFFIX@LINKHACK.la
 else
 noinst_LTLIBRARIES = libnavigation.la
-endif
 endif
 
 # Remove any linklibraries detected by configure, as they are not
@@ -95,16 +91,6 @@ EXTRA_libnavigation_la_SOURCES = \
 libnavigation@SUFFIX@LINKHACK_la_SOURCES = $(BuildSources)
 EXTRA_libnavigation@SUFFIX@LINKHACK_la_SOURCES = \
 	$(PublicHeaders) $(PrivateHeaders) $(ExtraSources)
-
-navigation_lst_SOURCES = $(BuildSources)
-EXTRA_navigation_lst_SOURCES = \
-	$(PublicHeaders) $(PrivateHeaders) $(ExtraSources)
-
-# this rule causes a make warning, so we remove it when it is not in use
-navigation.lst: Makefile $(navigation_lst_OBJECTS)
-	@echo "Linking navigation.lst..."; \
-	rm -f $@; touch $@; \
-	for i in $(navigation_lst_OBJECTS); do echo $$i >>$@; done
 
 install-libnavigationincHEADERS: $(libnavigationinc_HEADERS)
 	@$(NORMAL_INSTALL)

@@ -52,14 +52,10 @@ BuildSources = $(RegularSources)
 ExtraSources = $(LinkHackSources)
 endif
 
-if BUILD_WITH_MSVC
-noinst_LIBRARIES = caches.lst
-else
 if HACKING_DYNAMIC_MODULES
 lib_LTLIBRARIES = libcaches@SUFFIX@LINKHACK.la
 else
 noinst_LTLIBRARIES = libcaches.la
-endif
 endif
 
 # Remove any linklibraries detected by configure, as they are not
@@ -85,16 +81,6 @@ EXTRA_libcaches_la_SOURCES = \
 libcaches@SUFFIX@LINKHACK_la_SOURCES = $(BuildSources)
 EXTRA_libcaches@SUFFIX@LINKHACK_la_SOURCES = \
 	$(PublicHeaders) $(PrivateHeaders) $(ExtraSources)
-
-caches_lst_SOURCES = $(BuildSources)
-EXTRA_caches_lst_SOURCES = \
-	$(PublicHeaders) $(PrivateHeaders) $(ExtraSources)
-
-# this rule causes a make warning, so we remove it when it is not in use
-caches.lst: Makefile $(caches_lst_OBJECTS)
-	@echo "Linking caches.lst..."; \
-	rm -f $@; touch $@; \
-	for i in $(caches_lst_OBJECTS); do echo $$i >>$@; done
 
 install-libcachesincHEADERS: $(libcachesinc_HEADERS)
 	@$(NORMAL_INSTALL)

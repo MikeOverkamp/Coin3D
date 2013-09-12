@@ -40,14 +40,10 @@ BuildSources = $(RegularSources)
 ExtraSources = $(LinkHackSources)
 endif
 
-if BUILD_WITH_MSVC
-noinst_LIBRARIES = shadows.lst
-else
 if HACKING_DYNAMIC_MODULES
 lib_LTLIBRARIES = libshadows@SUFFIX@LINKHACK.la
 else
 noinst_LTLIBRARIES = libshadows.la
-endif
 endif
 
 # Remove any linklibraries detected by configure, as they are not
@@ -73,16 +69,6 @@ EXTRA_libshadows_la_SOURCES = \
 libshadows@SUFFIX@LINKHACK_la_SOURCES = $(BuildSources)
 EXTRA_libshadows@SUFFIX@LINKHACK_la_SOURCES = \
 	$(PublicHeaders) $(PrivateHeaders) $(ExtraSources)
-
-shadows_lst_SOURCES = $(BuildSources)
-EXTRA_shadows_lst_SOURCES = \
-	$(PublicHeaders) $(PrivateHeaders) $(ExtraSources)
-
-# this rule causes a make warning, so we remove it when it is not in use
-shadows.lst: Makefile $(shadows_lst_OBJECTS)
-	@echo "Linking shadows.lst..."; \
-	rm -f $@; touch $@; \
-	for i in $(shadows_lst_OBJECTS); do echo $$i >>$@; done
 
 install-libshadowsincHEADERS: $(libshadowsinc_HEADERS)
 	@$(NORMAL_INSTALL)

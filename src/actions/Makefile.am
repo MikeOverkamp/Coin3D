@@ -56,14 +56,10 @@ BuildSources = $(RegularSources)
 ExtraSources = $(LinkHackSources)
 endif
 
-if BUILD_WITH_MSVC
-noinst_LIBRARIES = actions.lst
-else
 if HACKING_DYNAMIC_MODULES
 lib_LTLIBRARIES = libactions@SUFFIX@LINKHACK.la
 else
 noinst_LTLIBRARIES = libactions.la
-endif
 endif
 
 # Remove any linklibraries detected by configure, as they are not
@@ -89,16 +85,6 @@ EXTRA_libactions_la_SOURCES = \
 libactions@SUFFIX@LINKHACK_la_SOURCES = $(BuildSources)
 EXTRA_libactions@SUFFIX@LINKHACK_la_SOURCES = \
 	$(PublicHeaders) $(PrivateHeaders) $(ExtraSources)
-
-actions_lst_SOURCES = $(BuildSources)
-EXTRA_actions_lst_SOURCES = \
-	$(PublicHeaders) $(PrivateHeaders) $(ExtraSources)
-
-# this rule causes a make warning, so we remove it when it is not in use
-actions.lst: Makefile $(actions_lst_OBJECTS)
-	@echo "Linking actions.lst..."; \
-	rm -f $@; touch $@; \
-	for i in $(actions_lst_OBJECTS); do echo $$i >>$@; done
 
 install-libactionsincHEADERS: $(libactionsinc_HEADERS)
 	@$(NORMAL_INSTALL)

@@ -100,14 +100,10 @@ BuildSources = $(RegularSources)
 ExtraSources = $(LinkHackSources)
 endif
 
-if BUILD_WITH_MSVC
-noinst_LIBRARIES = engines.lst
-else
 if HACKING_DYNAMIC_MODULES
 lib_LTLIBRARIES = libengines@SUFFIX@LINKHACK.la
 else
 noinst_LTLIBRARIES = libengines.la
-endif
 endif
 
 # Remove any linklibraries detected by configure, as they are not
@@ -133,16 +129,6 @@ EXTRA_libengines_la_SOURCES = \
 libengines@SUFFIX@LINKHACK_la_SOURCES = $(BuildSources)
 EXTRA_libengines@SUFFIX@LINKHACK_la_SOURCES = \
 	$(PublicHeaders) $(PrivateHeaders) $(ExtraSources)
-
-engines_lst_SOURCES = $(BuildSources)
-EXTRA_engines_lst_SOURCES = \
-	$(PublicHeaders) $(PrivateHeaders) $(ExtraSources)
-
-# this rule causes a make warning, so we remove it when it is not in use
-engines.lst: Makefile $(engines_lst_OBJECTS)
-	@echo "Linking engines.lst..."; \
-	rm -f $@; touch $@; \
-	for i in $(engines_lst_OBJECTS); do echo $$i >>$@; done
 
 install-libenginesincHEADERS: $(libenginesinc_HEADERS)
 	@$(NORMAL_INSTALL)

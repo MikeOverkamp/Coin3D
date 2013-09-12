@@ -72,13 +72,6 @@ AC_SUBST([RFC822_DATE])
 SIM_AC_ISO8601_DATE([coin_configure_date])
 AC_SUBST([coin_configure_date])
 
-SIM_AC_MSVC_DSP_ENABLE_OPTION
-
-# If the Microsoft Visual C++ cl.exe compiler is available, set us up for
-# compiling with it and to generate an MSWindows .dll file.
-
-SIM_AC_SETUP_MSVCPP_IFELSE
-
 # **************************************************************************
 # Mac OS X: gcc
 
@@ -211,21 +204,6 @@ AC_PROG_CC
 # NOTE: if we touch CFLAGS/CXXFLAGS before AC_PROG_CC is invoked, the -g
 # flag will be lost  20020104 larsa
 
-if $BUILD_WITH_MSVC; then
-  SIM_AC_SETUP_MSVCRT([
-    CPPFLAGS="$CPPFLAGS $sim_ac_msvcrt_CPPFLAGS"
-    CFLAGS="$CFLAGS $sim_ac_msvcrt_CFLAGS"
-    CXXFLAGS="$CXXFLAGS $sim_ac_msvcrt_CXXFLAGS"
-    LDFLAGS="$LDFLAGS $sim_ac_msvcrt_LDFLAGS"
-    LIBS="$LIBS $sim_ac_msvcrt_LIBS"
-    # sim_ac_msvcrt_LIBLIBS is set up at the end
-    # sim_ac_msvcrt_LIBLDFLAGS is set up at the end
-  ])
-fi
-
-AC_SUBST([COIN_MSVC_LIBC], [$sim_ac_msvcrt])
-AC_SUBST([BUILD_WITH_MSVC])
-
 # **************************************************************************
 # Universal Binary support (Mac OS X)
 
@@ -233,7 +211,7 @@ SIM_AC_UNIVERSAL_BINARIES
 
 # **************************************************************************
 
-AM_INIT_AUTOMAKE(Coin, $VERSION)
+AM_INIT_AUTOMAKE([subdir-objects])
 
 #  Default to not building a static library.
 #  Can be overridden by the user with --enable-static.
@@ -241,11 +219,6 @@ AM_DISABLE_STATIC
 
 #  Turn off default maintainer make-rules -- use ./bootstrap instead.
 AM_MAINTAINER_MODE
-
-if $BUILD_WITH_MSVC; then
-  RANLIB=:
-  export RANLIB
-fi
 
 # **************************************************************************
 #  Locate C++ compiler and set C++ as the default language to use
@@ -267,15 +240,6 @@ AC_PROG_CXXCPP
 # Since the plan is to not compile pure C anymore, we can simplify by always
 # setting C++ mode in Coin's configure script.
 AC_LANG([C++])
-
-if $BUILD_WITH_MSVC; then
-  SIM_AC_MSC_VERSION
-
-  case "$sim_ac_msc_major_version" in
-  8 | 9) CPPFLAGS="$CPPFLAGS -D_CRT_NONSTDC_NO_DEPRECATE -D_CRT_SECURE_NO_DEPRECATE -D_CRT_SECURE_NO_WARNINGS" ;;
-  *)
-  esac
-fi
 
 SIM_AC_STRIP_EXIT_DECLARATION
 
@@ -1046,19 +1010,6 @@ SIM_AC_PROFILING_SUPPORT
 SIM_AC_COMPILER_WARNINGS
 SIM_AC_DETECT_COMMON_COMPILER_FLAGS
 
-# Disable bool type with MSVC.
-#
-# "/noBool" should not be part of the SIM_AC_DETECT_COMMON_COMPILER_FLAGS
-# macro, because some projects will not compile properly with it.
-# (Like at least SoQt, since the Qt headers defines the bool type, which
-# will then cause a compiler error when q[whatever].h is included.)
-
-# The setting of /noBool for MSVC has been disabled because of problems with
-# using <limits> with Visual C++ 6.  2007-10-03 larsa
-# SIM_AC_COMPILER_NOBOOL([
-#   sim_ac_compiler_CXXFLAGS="$sim_ac_compiler_CXXFLAGS $sim_ac_nobool_CXXFLAGS"
-# ])
-
 #  Yep, this is important in case we want to add code to make
 #  the API interface "Open Inventor strict", meaning the user must
 #  use the exact same include files as under "real" Open Inventor.
@@ -1069,19 +1020,6 @@ SIM_AC_DETECT_COMMON_COMPILER_FLAGS
 #  "inefficient including" internally.
 
 CPPFLAGS="$CPPFLAGS -DCOIN_INTERNAL"
-
-if $BUILD_WITH_MSVC; then
-  case ${enable_static-no} in
-  yes | true)  COIN_STATIC=true;
-               enable_shared=no ;; # --enable-static-problem with autoconf 2.58
-  *)           COIN_STATIC=false ;;
-  esac
-  case ${enable_shared-default} in
-  default)     ;;
-  yes | true)  COIN_STATIC=false ;;
-  *)           COIN_STATIC=true ;;
-  esac
-fi
 
 # **************************************************************************
 # Check for various system specifics.
@@ -2146,91 +2084,10 @@ if $sim_ac_win32_declspec_available; then
   fi
 fi
 
-AM_CONDITIONAL(BUILD_WITH_MSVC, $BUILD_WITH_MSVC)
-
 COIN_COMPILER="$CXX"
 
-if $BUILD_WITH_MSVC; then
-  COIN_TESTSUITE_EXTRA_CPPFLAGS="/Fdtestsuite.pdb /EHsc"
-  COIN_TESTSUITE_EXTRA_LDFLAGS="/SUBSYSTEM:console /DEBUG"
-  rm -f vc60.pdb
-  LIBFLAGS="$LIBFLAGS $sim_ac_msvcrt_LIBLDFLAGS"
-  LIBS="$LIBS $sim_ac_msvcrt_LIBLIBS"
-
-  debugfile="`pwd`/src/coin${COIN_MAJOR_VERSION}${SUFFIX}.pdb"
-  debugfile=`cygpath -w "$debugfile" | sed 's,\\\\,\\\\\\\\,g'`
-
-  if $COIN_STATIC; then
-    LIBS=
-    LIBFLAGS="-LIB $LIBFLAGS"
-    LIBFLAGS="$LIBFLAGS /OUT:coin$COIN_MAJOR_VERSION$SUFFIX.lib"
-    case $enable_symbols in
-    no | false)
-      SIM_AC_CONFIGURATION_SETTING([Coin build type], [static .lib, no symbols])
-      ;;
-    *)
-      SIM_AC_CONFIGURATION_SETTING([Coin build type], [static .lib, with symbols])
-      CFLAGS="-g $CFLAGS"
-      CXXFLAGS="-g $CXXFLAGS"
-      ;;
-    esac
-  else
-    LIBFLAGS="-DLL /INCREMENTAL:NO $LIBFLAGS"
-    case $enable_debug in
-    no | false)
-      release_string=" (release)"
-      debug_flag=" /DEBUG"
-      ;;
-    *)
-      release_string=""
-      debug_flag=" /DEBUG"
-      ;;
-    esac
-    case $enable_symbols in
-    no | false)
-      SIM_AC_CONFIGURATION_SETTING([Coin build type],
-                                   [dynamic .dll${release_string}])
-      LIBFLAGS="$LIBFLAGS ${debug_flag}"
-      ;;
-    *)
-      SIM_AC_CONFIGURATION_SETTING([Coin build type],
-                                   [dynamic .dll${release_string} + .pdb])
-      CFLAGS="-g $CFLAGS"
-      CXXFLAGS="-g $CXXFLAGS"
-      LIBFLAGS="$LIBFLAGS ${debug_flag} /PDB:coin$COIN_MAJOR_VERSION$SUFFIX.pdb"
-      ;;
-    esac
-    LIBFLAGS="$LIBFLAGS /OUT:coin$COIN_MAJOR_VERSION$SUFFIX.dll"
-  fi
-  SIM_AC_CONFIGURATION_SETTING([C library version], [$sim_ac_msvcrt])
-
-  # We use a version suffix on the .dll-file, so several incompatible
-  # (major) versions can be installed on a system.
-  #
-  # BTW, when linking DLLs, the 3rd-party .lib files will be
-  # linked into the .dll file. I believe it is still advisable to
-  # list all libs used upon `coin-config --libs`, as we can then
-  # also use them from "parent" code (remember that their interfaces
-  # is not exposed from the DLL) without any fuss.
-  sim_ac_coin_noextname="coin${COIN_MAJOR_VERSION}${SUFFIX}"
-  if test -n "$COIN_EXTRA_LIBS"; then
-    COIN_EXTRA_LIBS="-l${sim_ac_coin_noextname} $COIN_EXTRA_LIBS"
-  else
-    COIN_EXTRA_LIBS="-l${sim_ac_coin_noextname}"
-  fi
-
-  sim_ac_coin_dll_name="${sim_ac_coin_noextname}${sim_ac_shlibext}"
-
-else
-  COIN_EXTRA_LIBS="-lCoin${SUFFIX} $COIN_EXTRA_LIBS"
-  sim_ac_coin_dll_name="libCoin${SUFFIX}${sim_ac_shlibext}"
-fi
-
-if $BUILD_WITH_MSVC; then
-  # we'll use the installed wrapper when we use the coin-config script later
-  # so we can remove the source code hierarchy
-  COIN_COMPILER="wrapmsvc"
-fi
+COIN_EXTRA_LIBS="-lCoin${SUFFIX} $COIN_EXTRA_LIBS"
+sim_ac_coin_dll_name="libCoin${SUFFIX}${sim_ac_shlibext}"
 
 AC_DEFINE_UNQUOTED([COIN_SYSTEM_LIBRARY_NAME], ["$sim_ac_coin_dll_name"],
                    [define this to the dynamic library name of Coin])
@@ -2325,8 +2182,6 @@ esac
 
 AC_SUBST([COIN_COMPILER])
 AC_SUBST([ac_compiler_gnu])
-
-SIM_AC_MSVC_DSP_SETUP([COIN], [Coin], [coin], [-I$coin_build_dir -I$coin_build_dir/include -I$coin_src_dir/include -I$coin_build_dir/src -I$coin_src_dir/src -I$coin_src_dir/include/Inventor/annex])
 
 # **************************************************************************
 
@@ -2524,12 +2379,6 @@ case "$host_os" in
     esac
     ;;
   cygwin*)
-    case "$CXX" in
-    *wrapmsvc* )
-      ac_coin_untested_platform=false
-      ac_coin_not_sim_platform=false
-    ;;
-    esac
     ;;
   darwin*)
     case "$CXX" in

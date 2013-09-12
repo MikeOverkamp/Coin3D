@@ -39,14 +39,10 @@ BuildSources = $(RegularSources)
 ExtraSources = $(LinkHackSources)
 endif
 
-if BUILD_WITH_MSVC
-noinst_LIBRARIES = bundles.lst
-else
 if HACKING_DYNAMIC_MODULES
 lib_LTLIBRARIES = libbundles@SUFFIX@LINKHACK.la
 else
 noinst_LTLIBRARIES = libbundles.la
-endif
 endif
 
 # Remove any linklibraries detected by configure, as they are not
@@ -72,16 +68,6 @@ EXTRA_libbundles_la_SOURCES = \
 libbundles@SUFFIX@LINKHACK_la_SOURCES = $(BuildSources)
 EXTRA_libbundles@SUFFIX@LINKHACK_la_SOURCES = \
 	$(PublicHeaders) $(PrivateHeaders) $(ExtraSources)
-
-bundles_lst_SOURCES = $(BuildSources)
-EXTRA_bundles_lst_SOURCES = \
-	$(PublicHeaders) $(PrivateHeaders) $(ExtraSources)
-
-# this rule causes a make warning, so we remove it when it is not in use
-bundles.lst: Makefile $(bundles_lst_OBJECTS)
-	@echo "Linking bundles.lst..."; \
-	rm -f $@; touch $@; \
-	for i in $(bundles_lst_OBJECTS); do echo $$i >>$@; done
 
 install-libbundlesincHEADERS: $(libbundlesinc_HEADERS)
 	@$(NORMAL_INSTALL)

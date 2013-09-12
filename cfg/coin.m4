@@ -21,7 +21,6 @@
 # < $sim_ac_coin_datadir     (location of Coin data files)
 # < $sim_ac_coin_includedir  (location of Coin headers)
 # < $sim_ac_coin_version     (the libCoin version)
-# < $sim_ac_coin_msvcrt      (the MSVC++ C library Coin was built with)
 # < $sim_ac_coin_configcmd   (the path to coin-config or "false")
 #
 # Authors:
@@ -88,10 +87,9 @@ if $sim_ac_coin_desired; then
     sim_ac_coin_ldflags=`$sim_ac_coin_configcmd --ldflags`
     sim_ac_coin_libs=`$sim_ac_coin_configcmd --libs`
     sim_ac_coin_datadir=`$sim_ac_coin_configcmd --datadir`
-    # Hide stderr on the following, as ``--includedir'', ``--msvcrt''
+    # Hide stderr on the following, as ``--includedir''
     # and ``--cflags'' options were added late to coin-config.
     sim_ac_coin_includedir=`$sim_ac_coin_configcmd --includedir 2>/dev/null`
-    sim_ac_coin_msvcrt=`$sim_ac_coin_configcmd --msvcrt 2>/dev/null`
     sim_ac_coin_cflags=`$sim_ac_coin_configcmd --cflags 2>/dev/null`
     AC_CACHE_CHECK(
       [if we can compile and link with the Coin library],

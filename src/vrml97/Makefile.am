@@ -108,14 +108,10 @@ BuildSources = $(RegularSources)
 ExtraSources = $(LinkHackSources)
 endif
 
-if BUILD_WITH_MSVC
-noinst_LIBRARIES = vrml97.lst
-else
 if HACKING_DYNAMIC_MODULES
 lib_LTLIBRARIES = libvrml97@SUFFIX@LINKHACK.la
 else
 noinst_LTLIBRARIES = libvrml97.la
-endif
 endif
 
 # Remove any linklibraries detected by configure, as they are not
@@ -141,16 +137,6 @@ EXTRA_libvrml97_la_SOURCES = \
 libvrml97@SUFFIX@LINKHACK_la_SOURCES = $(BuildSources)
 EXTRA_libvrml97@SUFFIX@LINKHACK_la_SOURCES = \
 	$(PublicHeaders) $(PrivateHeaders) $(ExtraSources)
-
-vrml97_lst_SOURCES = $(BuildSources)
-EXTRA_vrml97_lst_SOURCES = \
-	$(PublicHeaders) $(PrivateHeaders) $(ExtraSources)
-
-# this rule causes a make warning, so we remove it when it is not in use
-vrml97.lst: Makefile $(vrml97_lst_OBJECTS)
-	@echo "Linking vrml97.lst..."; \
-	rm -f $@; touch $@; \
-	for i in $(vrml97_lst_OBJECTS); do echo $$i >>$@; done
 
 install-libvrml97incHEADERS: $(libvrml97inc_HEADERS)
 	@$(NORMAL_INSTALL)

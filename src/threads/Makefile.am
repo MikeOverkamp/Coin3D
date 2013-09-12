@@ -51,15 +51,12 @@ ObsoleteHeaders =
 
 # **************************************************************************
 
-if BUILD_WITH_MSVC
 # win32 isn't able to link wrappers without including all dependencies
-else
 # also disabled for other platforms since there were also problems
 # with IRIX CC
 #noinst_PROGRAMS = wrappers
 #wrappers_SOURCES = wrappers.cpp
 #wrappers_LDADD = libthreads.la
-endif
 
 ##$ BEGIN TEMPLATE Make-Common(threads, threads)
 # **************************************************************************
@@ -87,14 +84,10 @@ BuildSources = $(RegularSources)
 ExtraSources = $(LinkHackSources)
 endif
 
-if BUILD_WITH_MSVC
-noinst_LIBRARIES = threads.lst
-else
 if HACKING_DYNAMIC_MODULES
 lib_LTLIBRARIES = libthreads@SUFFIX@LINKHACK.la
 else
 noinst_LTLIBRARIES = libthreads.la
-endif
 endif
 
 # Remove any linklibraries detected by configure, as they are not
@@ -120,16 +113,6 @@ EXTRA_libthreads_la_SOURCES = \
 libthreads@SUFFIX@LINKHACK_la_SOURCES = $(BuildSources)
 EXTRA_libthreads@SUFFIX@LINKHACK_la_SOURCES = \
 	$(PublicHeaders) $(PrivateHeaders) $(ExtraSources)
-
-threads_lst_SOURCES = $(BuildSources)
-EXTRA_threads_lst_SOURCES = \
-	$(PublicHeaders) $(PrivateHeaders) $(ExtraSources)
-
-# this rule causes a make warning, so we remove it when it is not in use
-threads.lst: Makefile $(threads_lst_OBJECTS)
-	@echo "Linking threads.lst..."; \
-	rm -f $@; touch $@; \
-	for i in $(threads_lst_OBJECTS); do echo $$i >>$@; done
 
 install-libthreadsincHEADERS: $(libthreadsinc_HEADERS)
 	@$(NORMAL_INSTALL)

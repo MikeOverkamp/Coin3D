@@ -52,14 +52,10 @@ BuildSources = $(RegularSources)
 ExtraSources = $(LinkHackSources)
 endif
 
-if BUILD_WITH_MSVC
-noinst_LIBRARIES = lists.lst
-else
 if HACKING_DYNAMIC_MODULES
 lib_LTLIBRARIES = liblists@SUFFIX@LINKHACK.la
 else
 noinst_LTLIBRARIES = liblists.la
-endif
 endif
 
 # Remove any linklibraries detected by configure, as they are not
@@ -85,16 +81,6 @@ EXTRA_liblists_la_SOURCES = \
 liblists@SUFFIX@LINKHACK_la_SOURCES = $(BuildSources)
 EXTRA_liblists@SUFFIX@LINKHACK_la_SOURCES = \
 	$(PublicHeaders) $(PrivateHeaders) $(ExtraSources)
-
-lists_lst_SOURCES = $(BuildSources)
-EXTRA_lists_lst_SOURCES = \
-	$(PublicHeaders) $(PrivateHeaders) $(ExtraSources)
-
-# this rule causes a make warning, so we remove it when it is not in use
-lists.lst: Makefile $(lists_lst_OBJECTS)
-	@echo "Linking lists.lst..."; \
-	rm -f $@; touch $@; \
-	for i in $(lists_lst_OBJECTS); do echo $$i >>$@; done
 
 install-liblistsincHEADERS: $(liblistsinc_HEADERS)
 	@$(NORMAL_INSTALL)

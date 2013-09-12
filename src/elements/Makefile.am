@@ -125,14 +125,10 @@ BuildSources = $(RegularSources)
 ExtraSources = $(LinkHackSources)
 endif
 
-if BUILD_WITH_MSVC
-noinst_LIBRARIES = elements.lst
-else
 if HACKING_DYNAMIC_MODULES
 lib_LTLIBRARIES = libelements@SUFFIX@LINKHACK.la
 else
 noinst_LTLIBRARIES = libelements.la
-endif
 endif
 
 # Remove any linklibraries detected by configure, as they are not
@@ -158,16 +154,6 @@ EXTRA_libelements_la_SOURCES = \
 libelements@SUFFIX@LINKHACK_la_SOURCES = $(BuildSources)
 EXTRA_libelements@SUFFIX@LINKHACK_la_SOURCES = \
 	$(PublicHeaders) $(PrivateHeaders) $(ExtraSources)
-
-elements_lst_SOURCES = $(BuildSources)
-EXTRA_elements_lst_SOURCES = \
-	$(PublicHeaders) $(PrivateHeaders) $(ExtraSources)
-
-# this rule causes a make warning, so we remove it when it is not in use
-elements.lst: Makefile $(elements_lst_OBJECTS)
-	@echo "Linking elements.lst..."; \
-	rm -f $@; touch $@; \
-	for i in $(elements_lst_OBJECTS); do echo $$i >>$@; done
 
 install-libelementsincHEADERS: $(libelementsinc_HEADERS)
 	@$(NORMAL_INSTALL)

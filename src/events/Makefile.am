@@ -41,14 +41,10 @@ BuildSources = $(RegularSources)
 ExtraSources = $(LinkHackSources)
 endif
 
-if BUILD_WITH_MSVC
-noinst_LIBRARIES = events.lst
-else
 if HACKING_DYNAMIC_MODULES
 lib_LTLIBRARIES = libevents@SUFFIX@LINKHACK.la
 else
 noinst_LTLIBRARIES = libevents.la
-endif
 endif
 
 # Remove any linklibraries detected by configure, as they are not
@@ -74,16 +70,6 @@ EXTRA_libevents_la_SOURCES = \
 libevents@SUFFIX@LINKHACK_la_SOURCES = $(BuildSources)
 EXTRA_libevents@SUFFIX@LINKHACK_la_SOURCES = \
 	$(PublicHeaders) $(PrivateHeaders) $(ExtraSources)
-
-events_lst_SOURCES = $(BuildSources)
-EXTRA_events_lst_SOURCES = \
-	$(PublicHeaders) $(PrivateHeaders) $(ExtraSources)
-
-# this rule causes a make warning, so we remove it when it is not in use
-events.lst: Makefile $(events_lst_OBJECTS)
-	@echo "Linking events.lst..."; \
-	rm -f $@; touch $@; \
-	for i in $(events_lst_OBJECTS); do echo $$i >>$@; done
 
 install-libeventsincHEADERS: $(libeventsinc_HEADERS)
 	@$(NORMAL_INSTALL)

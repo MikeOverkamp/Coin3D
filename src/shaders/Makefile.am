@@ -69,14 +69,10 @@ BuildSources = $(RegularSources)
 ExtraSources = $(LinkHackSources)
 endif
 
-if BUILD_WITH_MSVC
-noinst_LIBRARIES = shaders.lst
-else
 if HACKING_DYNAMIC_MODULES
 lib_LTLIBRARIES = libshaders@SUFFIX@LINKHACK.la
 else
 noinst_LTLIBRARIES = libshaders.la
-endif
 endif
 
 # Remove any linklibraries detected by configure, as they are not
@@ -102,16 +98,6 @@ EXTRA_libshaders_la_SOURCES = \
 libshaders@SUFFIX@LINKHACK_la_SOURCES = $(BuildSources)
 EXTRA_libshaders@SUFFIX@LINKHACK_la_SOURCES = \
 	$(PublicHeaders) $(PrivateHeaders) $(ExtraSources)
-
-shaders_lst_SOURCES = $(BuildSources)
-EXTRA_shaders_lst_SOURCES = \
-	$(PublicHeaders) $(PrivateHeaders) $(ExtraSources)
-
-# this rule causes a make warning, so we remove it when it is not in use
-shaders.lst: Makefile $(shaders_lst_OBJECTS)
-	@echo "Linking shaders.lst..."; \
-	rm -f $@; touch $@; \
-	for i in $(shaders_lst_OBJECTS); do echo $$i >>$@; done
 
 install-libshadersincHEADERS: $(libshadersinc_HEADERS)
 	@$(NORMAL_INSTALL)

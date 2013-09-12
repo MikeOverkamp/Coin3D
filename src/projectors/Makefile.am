@@ -45,14 +45,10 @@ BuildSources = $(RegularSources)
 ExtraSources = $(LinkHackSources)
 endif
 
-if BUILD_WITH_MSVC
-noinst_LIBRARIES = projectors.lst
-else
 if HACKING_DYNAMIC_MODULES
 lib_LTLIBRARIES = libprojectors@SUFFIX@LINKHACK.la
 else
 noinst_LTLIBRARIES = libprojectors.la
-endif
 endif
 
 # Remove any linklibraries detected by configure, as they are not
@@ -78,16 +74,6 @@ EXTRA_libprojectors_la_SOURCES = \
 libprojectors@SUFFIX@LINKHACK_la_SOURCES = $(BuildSources)
 EXTRA_libprojectors@SUFFIX@LINKHACK_la_SOURCES = \
 	$(PublicHeaders) $(PrivateHeaders) $(ExtraSources)
-
-projectors_lst_SOURCES = $(BuildSources)
-EXTRA_projectors_lst_SOURCES = \
-	$(PublicHeaders) $(PrivateHeaders) $(ExtraSources)
-
-# this rule causes a make warning, so we remove it when it is not in use
-projectors.lst: Makefile $(projectors_lst_OBJECTS)
-	@echo "Linking projectors.lst..."; \
-	rm -f $@; touch $@; \
-	for i in $(projectors_lst_OBJECTS); do echo $$i >>$@; done
 
 install-libprojectorsincHEADERS: $(libprojectorsinc_HEADERS)
 	@$(NORMAL_INSTALL)

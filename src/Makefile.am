@@ -49,11 +49,7 @@ DEFAULT_INCLUDES = -I$(top_builddir)/include -I$(top_srcdir)/include -I$(top_bui
 
 # **************************************************************************
 
-if BUILD_WITH_MSVC
-lib_LIBRARIES = coin@COIN_MAJOR_VERSION@@SUFFIX@.lib
-else
 lib_LTLIBRARIES = libCoin@SUFFIX@.la
-endif
 
 if MAC_FRAMEWORK
 # hack to change libdir value when installing Mac OS X compiler framework
@@ -143,31 +139,9 @@ endif
 PrivateHeaders =
 
 libCoin@SUFFIX@_la_SOURCES = $(RegularSources)
-coin@COIN_MAJOR_VERSION@@SUFFIX@_lib_SOURCES = $(RegularSources)
 
 EXTRA_libCoin@SUFFIX@_la_SOURCES = $(PrivateHeaders)
-EXTRA_coin@COIN_MAJOR_VERSION@@SUFFIX@_lib_SOURCES = $(PrivateHeaders)
 
-# **************************************************************************
-
-coin@COIN_MAJOR_VERSION@@SUFFIX@_lib_LIBADD = actions/actions.lst       \
-	base/base.lst bundles/bundles.lst caches/caches.lst             \
-	elements/elements.lst elements/GL/glelements.lst                \
-	engines/engines.lst errors/errors.lst events/events.lst         \
-	fields/fields.lst fonts/fonts.lst glue/glue.lst io/io.lst       \
-	misc/misc.lst rendering/rendering.lst lists/lists.lst           \
-	nodekits/nodekits.lst nodes/nodes.lst                           \
-	shapenodes/shapenodes.lst projectors/projectors.lst             \
-	sensors/sensors.lst navigation/navigation.lst                   \
-	details/details.lst draggers/draggers.lst manips/manips.lst     \
-	upgraders/upgraders.lst 3ds/format3ds.lst                       \
-	collision/collision.lst hardcopy/hardcopy.lst                   \
-	threads/threads.lst shaders/shaders.lst shadows/shadows.lst     \
-	geo/geo.lst foreignfiles/foreignfiles.lst xml/xml.lst           \
-	xml/expat/expat.lst profiler/profiler.lst vrml97/vrml97.lst     \
-	scxml/scxml.lst soscxml/soscxml.lst $(SUPERGLULSTADD)
-
-# **************************************************************************
 # Installation information.
 
 # On Mac OS 10.2 or later, create two-level namespace binaries and use
@@ -193,24 +167,6 @@ libCoin@SUFFIX@_la_LDFLAGS = \
 	$(LibtoolLinkArgs) \
 	-version-info $(LT_CURRENT):$(LT_REVISION):$(LT_AGE)
 
-# **************************************************************************
-# Custom rule for linking a Visual C++ (MS Windows) library.
-
-coin@COIN_MAJOR_VERSION@@SUFFIX@.lib: Makefile Coin.RES \
-  $(coin@COIN_MAJOR_VERSION@@SUFFIX@_lib_OBJECTS) \
-  $(coin@COIN_MAJOR_VERSION@@SUFFIX@_lib_DEPENDENCIES)
-	@basename="coin@COIN_MAJOR_VERSION@@SUFFIX@"; \
-	rm -f "$$basename.dll" "$$basename.lib"; \
-	echo "Linking $$basename.lib..."; \
-	echo $(CC) $(LDFLAGS) $(LIBFLAGS) \
-	  $(coin@COIN_MAJOR_VERSION@@SUFFIX@_lib_OBJECTS) \
-	  $(coin@COIN_MAJOR_VERSION@@SUFFIX@_lib_LIBADD) $(LIBS) Coin.RES; \
-	$(CC) $(LDFLAGS) $(LIBFLAGS) \
-	  $(coin@COIN_MAJOR_VERSION@@SUFFIX@_lib_OBJECTS) \
-	  $(coin@COIN_MAJOR_VERSION@@SUFFIX@_lib_LIBADD) $(LIBS) Coin.RES ;
-
-# **************************************************************************
-
 if MAC_FRAMEWORK
 install-data-local: install-exec-am
 	cd $(DESTDIR)$(MAC_FRAMEWORK_PREFIX)/$(MAC_FRAMEWORK_NAME).framework/Versions/Current && ln -sf Libraries/libCoin.dylib $(MAC_FRAMEWORK_NAME) && cd -; \
@@ -228,20 +184,7 @@ install-data-local:
 	done;
 endif
 
-if BUILD_WITH_MSVC
-install-exec-local: coin@COIN_MAJOR_VERSION@@SUFFIX@.lib
-	@basename="coin@COIN_MAJOR_VERSION@@SUFFIX@"; \
-	for ext in dll pdb; do \
-	  file="$$basename.$$ext"; \
-	  if test -f "$$file"; then \
-	    $(mkinstalldirs) "$(DESTDIR)$(bindir)"; \
-	    echo " $(INSTALL_PROGRAM) $$file $(DESTDIR)$(bindir)/$$file"; \
-	    $(INSTALL_PROGRAM) "$$file" "$(DESTDIR)$(bindir)/$$file" || exit 1; \
-	  fi \
-	done
-else
 install-exec-local:
-endif
 
 install-symlinks:
 	@for dir in \

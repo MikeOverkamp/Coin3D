@@ -40,14 +40,10 @@ BuildSources = $(RegularSources)
 ExtraSources = $(LinkHackSources)
 endif
 
-if BUILD_WITH_MSVC
-noinst_LIBRARIES = upgraders.lst
-else
 if HACKING_DYNAMIC_MODULES
 lib_LTLIBRARIES = libupgraders@SUFFIX@LINKHACK.la
 else
 noinst_LTLIBRARIES = libupgraders.la
-endif
 endif
 
 # Remove any linklibraries detected by configure, as they are not
@@ -73,16 +69,6 @@ EXTRA_libupgraders_la_SOURCES = \
 libupgraders@SUFFIX@LINKHACK_la_SOURCES = $(BuildSources)
 EXTRA_libupgraders@SUFFIX@LINKHACK_la_SOURCES = \
 	$(PublicHeaders) $(PrivateHeaders) $(ExtraSources)
-
-upgraders_lst_SOURCES = $(BuildSources)
-EXTRA_upgraders_lst_SOURCES = \
-	$(PublicHeaders) $(PrivateHeaders) $(ExtraSources)
-
-# this rule causes a make warning, so we remove it when it is not in use
-upgraders.lst: Makefile $(upgraders_lst_OBJECTS)
-	@echo "Linking upgraders.lst..."; \
-	rm -f $@; touch $@; \
-	for i in $(upgraders_lst_OBJECTS); do echo $$i >>$@; done
 
 install-libupgradersincHEADERS: $(libupgradersinc_HEADERS)
 	@$(NORMAL_INSTALL)

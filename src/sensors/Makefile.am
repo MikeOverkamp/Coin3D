@@ -46,14 +46,10 @@ BuildSources = $(RegularSources)
 ExtraSources = $(LinkHackSources)
 endif
 
-if BUILD_WITH_MSVC
-noinst_LIBRARIES = sensors.lst
-else
 if HACKING_DYNAMIC_MODULES
 lib_LTLIBRARIES = libsensors@SUFFIX@LINKHACK.la
 else
 noinst_LTLIBRARIES = libsensors.la
-endif
 endif
 
 # Remove any linklibraries detected by configure, as they are not
@@ -79,16 +75,6 @@ EXTRA_libsensors_la_SOURCES = \
 libsensors@SUFFIX@LINKHACK_la_SOURCES = $(BuildSources)
 EXTRA_libsensors@SUFFIX@LINKHACK_la_SOURCES = \
 	$(PublicHeaders) $(PrivateHeaders) $(ExtraSources)
-
-sensors_lst_SOURCES = $(BuildSources)
-EXTRA_sensors_lst_SOURCES = \
-	$(PublicHeaders) $(PrivateHeaders) $(ExtraSources)
-
-# this rule causes a make warning, so we remove it when it is not in use
-sensors.lst: Makefile $(sensors_lst_OBJECTS)
-	@echo "Linking sensors.lst..."; \
-	rm -f $@; touch $@; \
-	for i in $(sensors_lst_OBJECTS); do echo $$i >>$@; done
 
 install-libsensorsincHEADERS: $(libsensorsinc_HEADERS)
 	@$(NORMAL_INSTALL)

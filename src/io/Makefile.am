@@ -51,14 +51,10 @@ BuildSources = $(RegularSources)
 ExtraSources = $(LinkHackSources)
 endif
 
-if BUILD_WITH_MSVC
-noinst_LIBRARIES = io.lst
-else
 if HACKING_DYNAMIC_MODULES
 lib_LTLIBRARIES = libio@SUFFIX@LINKHACK.la
 else
 noinst_LTLIBRARIES = libio.la
-endif
 endif
 
 # Remove any linklibraries detected by configure, as they are not
@@ -84,16 +80,6 @@ EXTRA_libio_la_SOURCES = \
 libio@SUFFIX@LINKHACK_la_SOURCES = $(BuildSources)
 EXTRA_libio@SUFFIX@LINKHACK_la_SOURCES = \
 	$(PublicHeaders) $(PrivateHeaders) $(ExtraSources)
-
-io_lst_SOURCES = $(BuildSources)
-EXTRA_io_lst_SOURCES = \
-	$(PublicHeaders) $(PrivateHeaders) $(ExtraSources)
-
-# this rule causes a make warning, so we remove it when it is not in use
-io.lst: Makefile $(io_lst_OBJECTS)
-	@echo "Linking io.lst..."; \
-	rm -f $@; touch $@; \
-	for i in $(io_lst_OBJECTS); do echo $$i >>$@; done
 
 install-libioincHEADERS: $(libioinc_HEADERS)
 	@$(NORMAL_INSTALL)

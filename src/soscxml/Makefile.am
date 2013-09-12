@@ -54,14 +54,10 @@ BuildSources = $(RegularSources)
 ExtraSources = $(LinkHackSources)
 endif
 
-if BUILD_WITH_MSVC
-noinst_LIBRARIES = soscxml.lst
-else
 if HACKING_DYNAMIC_MODULES
 lib_LTLIBRARIES = libsoscxml@SUFFIX@LINKHACK.la
 else
 noinst_LTLIBRARIES = libsoscxml.la
-endif
 endif
 
 # Remove any linklibraries detected by configure, as they are not
@@ -87,16 +83,6 @@ EXTRA_libsoscxml_la_SOURCES = \
 libsoscxml@SUFFIX@LINKHACK_la_SOURCES = $(BuildSources)
 EXTRA_libsoscxml@SUFFIX@LINKHACK_la_SOURCES = \
 	$(PublicHeaders) $(PrivateHeaders) $(ExtraSources)
-
-soscxml_lst_SOURCES = $(BuildSources)
-EXTRA_soscxml_lst_SOURCES = \
-	$(PublicHeaders) $(PrivateHeaders) $(ExtraSources)
-
-# this rule causes a make warning, so we remove it when it is not in use
-soscxml.lst: Makefile $(soscxml_lst_OBJECTS)
-	@echo "Linking soscxml.lst..."; \
-	rm -f $@; touch $@; \
-	for i in $(soscxml_lst_OBJECTS); do echo $$i >>$@; done
 
 install-libsoscxmlincHEADERS: $(libsoscxmlinc_HEADERS)
 	@$(NORMAL_INSTALL)

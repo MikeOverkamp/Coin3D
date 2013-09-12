@@ -70,14 +70,10 @@ BuildSources = $(RegularSources)
 ExtraSources = $(LinkHackSources)
 endif
 
-if BUILD_WITH_MSVC
-noinst_LIBRARIES = shapenodes.lst
-else
 if HACKING_DYNAMIC_MODULES
 lib_LTLIBRARIES = libshapenodes@SUFFIX@LINKHACK.la
 else
 noinst_LTLIBRARIES = libshapenodes.la
-endif
 endif
 
 # Remove any linklibraries detected by configure, as they are not
@@ -103,16 +99,6 @@ EXTRA_libshapenodes_la_SOURCES = \
 libshapenodes@SUFFIX@LINKHACK_la_SOURCES = $(BuildSources)
 EXTRA_libshapenodes@SUFFIX@LINKHACK_la_SOURCES = \
 	$(PublicHeaders) $(PrivateHeaders) $(ExtraSources)
-
-shapenodes_lst_SOURCES = $(BuildSources)
-EXTRA_shapenodes_lst_SOURCES = \
-	$(PublicHeaders) $(PrivateHeaders) $(ExtraSources)
-
-# this rule causes a make warning, so we remove it when it is not in use
-shapenodes.lst: Makefile $(shapenodes_lst_OBJECTS)
-	@echo "Linking shapenodes.lst..."; \
-	rm -f $@; touch $@; \
-	for i in $(shapenodes_lst_OBJECTS); do echo $$i >>$@; done
 
 install-libshapenodesincHEADERS: $(libshapenodesinc_HEADERS)
 	@$(NORMAL_INSTALL)

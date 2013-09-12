@@ -60,14 +60,10 @@ BuildSources = $(RegularSources)
 ExtraSources = $(LinkHackSources)
 endif
 
-if BUILD_WITH_MSVC
-noinst_LIBRARIES = rendering.lst
-else
 if HACKING_DYNAMIC_MODULES
 lib_LTLIBRARIES = librendering@SUFFIX@LINKHACK.la
 else
 noinst_LTLIBRARIES = librendering.la
-endif
 endif
 
 # Remove any linklibraries detected by configure, as they are not
@@ -93,16 +89,6 @@ EXTRA_librendering_la_SOURCES = \
 librendering@SUFFIX@LINKHACK_la_SOURCES = $(BuildSources)
 EXTRA_librendering@SUFFIX@LINKHACK_la_SOURCES = \
 	$(PublicHeaders) $(PrivateHeaders) $(ExtraSources)
-
-rendering_lst_SOURCES = $(BuildSources)
-EXTRA_rendering_lst_SOURCES = \
-	$(PublicHeaders) $(PrivateHeaders) $(ExtraSources)
-
-# this rule causes a make warning, so we remove it when it is not in use
-rendering.lst: Makefile $(rendering_lst_OBJECTS)
-	@echo "Linking rendering.lst..."; \
-	rm -f $@; touch $@; \
-	for i in $(rendering_lst_OBJECTS); do echo $$i >>$@; done
 
 install-librenderingincHEADERS: $(librenderinginc_HEADERS)
 	@$(NORMAL_INSTALL)

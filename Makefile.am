@@ -448,13 +448,6 @@ else
 install-data-local:
 install-exec-local: $(srcdir)/cfg/wrapmsvc.exe
 	@$(NORMAL_INSTALL)
-	@if @BUILD_WITH_MSVC@; then \
-	  echo " $(mkinstalldirs) $(DESTDIR)$(bindir)"; \
-	  $(mkinstalldirs) $(DESTDIR)$(bindir); \
-	  p=wrapmsvc.exe; \
-	  echo " $(INSTALL_PROGRAM) $(srcdir)/cfg/$$p $(DESTDIR)$(bindir)/$$p"; \
-	  $(INSTALL_PROGRAM) $(srcdir)/cfg/$$p $(DESTDIR)$(bindir)/$$p; \
-	else :; fi
 endif
 endif
 

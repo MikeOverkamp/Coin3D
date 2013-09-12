@@ -444,6 +444,10 @@
 /* define for runtime linking with zlib */
 #undef LIBBZIP2_RUNTIME_LINKING
 
+/* Define to the sub-directory in which libtool stores uninstalled libraries.
+   */
+#undef LT_OBJDIR
+
 /* define for runtime linking with OpenAL */
 #undef OPENAL_RUNTIME_LINKING
 

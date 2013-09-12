@@ -43,14 +43,10 @@ BuildSources = $(RegularSources)
 ExtraSources = $(LinkHackSources)
 endif
 
-if BUILD_WITH_MSVC
-noinst_LIBRARIES = details.lst
-else
 if HACKING_DYNAMIC_MODULES
 lib_LTLIBRARIES = libdetails@SUFFIX@LINKHACK.la
 else
 noinst_LTLIBRARIES = libdetails.la
-endif
 endif
 
 # Remove any linklibraries detected by configure, as they are not
@@ -76,16 +72,6 @@ EXTRA_libdetails_la_SOURCES = \
 libdetails@SUFFIX@LINKHACK_la_SOURCES = $(BuildSources)
 EXTRA_libdetails@SUFFIX@LINKHACK_la_SOURCES = \
 	$(PublicHeaders) $(PrivateHeaders) $(ExtraSources)
-
-details_lst_SOURCES = $(BuildSources)
-EXTRA_details_lst_SOURCES = \
-	$(PublicHeaders) $(PrivateHeaders) $(ExtraSources)
-
-# this rule causes a make warning, so we remove it when it is not in use
-details.lst: Makefile $(details_lst_OBJECTS)
-	@echo "Linking details.lst..."; \
-	rm -f $@; touch $@; \
-	for i in $(details_lst_OBJECTS); do echo $$i >>$@; done
 
 install-libdetailsincHEADERS: $(libdetailsinc_HEADERS)
 	@$(NORMAL_INSTALL)

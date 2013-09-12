@@ -52,14 +52,10 @@ BuildSources = $(RegularSources)
 ExtraSources = $(LinkHackSources)
 endif
 
-if BUILD_WITH_MSVC
-noinst_LIBRARIES = geo.lst
-else
 if HACKING_DYNAMIC_MODULES
 lib_LTLIBRARIES = libgeo@SUFFIX@LINKHACK.la
 else
 noinst_LTLIBRARIES = libgeo.la
-endif
 endif
 
 # Remove any linklibraries detected by configure, as they are not
@@ -85,16 +81,6 @@ EXTRA_libgeo_la_SOURCES = \
 libgeo@SUFFIX@LINKHACK_la_SOURCES = $(BuildSources)
 EXTRA_libgeo@SUFFIX@LINKHACK_la_SOURCES = \
 	$(PublicHeaders) $(PrivateHeaders) $(ExtraSources)
-
-geo_lst_SOURCES = $(BuildSources)
-EXTRA_geo_lst_SOURCES = \
-	$(PublicHeaders) $(PrivateHeaders) $(ExtraSources)
-
-# this rule causes a make warning, so we remove it when it is not in use
-geo.lst: Makefile $(geo_lst_OBJECTS)
-	@echo "Linking geo.lst..."; \
-	rm -f $@; touch $@; \
-	for i in $(geo_lst_OBJECTS); do echo $$i >>$@; done
 
 install-libgeoincHEADERS: $(libgeoinc_HEADERS)
 	@$(NORMAL_INSTALL)

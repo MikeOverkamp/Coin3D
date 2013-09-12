@@ -48,14 +48,11 @@ BuildSources = $(RegularSources)
 ExtraSources = $(LinkHackSources)
 endif
 
-if BUILD_WITH_MSVC
-noinst_LIBRARIES = format3ds.lst
-else
 if HACKING_DYNAMIC_MODULES
 lib_LTLIBRARIES = libformat3ds@SUFFIX@LINKHACK.la
+libformat3ds@SUFFIX@LINKHACK_CXXFLAGS = $(AM_CXXFLAGS)
 else
 noinst_LTLIBRARIES = libformat3ds.la
-endif
 endif
 
 # Remove any linklibraries detected by configure, as they are not
@@ -81,16 +78,6 @@ EXTRA_libformat3ds_la_SOURCES = \
 libformat3ds@SUFFIX@LINKHACK_la_SOURCES = $(BuildSources)
 EXTRA_libformat3ds@SUFFIX@LINKHACK_la_SOURCES = \
 	$(PublicHeaders) $(PrivateHeaders) $(ExtraSources)
-
-format3ds_lst_SOURCES = $(BuildSources)
-EXTRA_format3ds_lst_SOURCES = \
-	$(PublicHeaders) $(PrivateHeaders) $(ExtraSources)
-
-# this rule causes a make warning, so we remove it when it is not in use
-format3ds.lst: Makefile $(format3ds_lst_OBJECTS)
-	@echo "Linking format3ds.lst..."; \
-	rm -f $@; touch $@; \
-	for i in $(format3ds_lst_OBJECTS); do echo $$i >>$@; done
 
 install-libformat3dsincHEADERS: $(libformat3dsinc_HEADERS)
 	@$(NORMAL_INSTALL)

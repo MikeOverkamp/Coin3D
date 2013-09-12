@@ -58,14 +58,10 @@ BuildSources = $(RegularSources)
 ExtraSources = $(LinkHackSources)
 endif
 
-if BUILD_WITH_MSVC
-noinst_LIBRARIES = draggers.lst
-else
 if HACKING_DYNAMIC_MODULES
 lib_LTLIBRARIES = libdraggers@SUFFIX@LINKHACK.la
 else
 noinst_LTLIBRARIES = libdraggers.la
-endif
 endif
 
 # Remove any linklibraries detected by configure, as they are not
@@ -91,16 +87,6 @@ EXTRA_libdraggers_la_SOURCES = \
 libdraggers@SUFFIX@LINKHACK_la_SOURCES = $(BuildSources)
 EXTRA_libdraggers@SUFFIX@LINKHACK_la_SOURCES = \
 	$(PublicHeaders) $(PrivateHeaders) $(ExtraSources)
-
-draggers_lst_SOURCES = $(BuildSources)
-EXTRA_draggers_lst_SOURCES = \
-	$(PublicHeaders) $(PrivateHeaders) $(ExtraSources)
-
-# this rule causes a make warning, so we remove it when it is not in use
-draggers.lst: Makefile $(draggers_lst_OBJECTS)
-	@echo "Linking draggers.lst..."; \
-	rm -f $@; touch $@; \
-	for i in $(draggers_lst_OBJECTS); do echo $$i >>$@; done
 
 install-libdraggersincHEADERS: $(libdraggersinc_HEADERS)
 	@$(NORMAL_INSTALL)
