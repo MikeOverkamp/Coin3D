@@ -164,7 +164,7 @@ cc_thread_id(void)
       assert(0 && "unexpected failure");
     }
   }
-  return (unsigned long) val;
+  return static_cast<unsigned long>(reinterpret_cast<intptr_t>(val));
 }
 
 static void 

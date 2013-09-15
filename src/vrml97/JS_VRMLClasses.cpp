@@ -110,8 +110,11 @@ struct CoinVrmlJs {
 struct CoinVrmlJs_SensorInfo {
   SbList <JSObject *> objects;
 };
+#if defined(_WIN64)
+SbHash<unsigned long long, void *> * CoinVrmlJs_sensorinfohash = NULL;
+#else
 SbHash<unsigned long, void *> * CoinVrmlJs_sensorinfohash = NULL;
-
+#endif
 
 const char * CoinVrmlJs_SFColorAliases[] = {"r", "g", "b"};
 const char * CoinVrmlJs_SFRotationAliases[] = {"x", "y", "z", "angle"};
@@ -674,7 +677,11 @@ static void SFNode_deleteCB(void * COIN_UNUSED_ARG(data), SoSensor * sensor)
 {
   SoNode * node = ((SoNodeSensor *) sensor)->getAttachedNode();
   void * tmp;
+#if defined(_WIN64)
+  if(!CoinVrmlJs_sensorinfohash->get((unsigned long long) node, tmp)) {
+#else
   if(!CoinVrmlJs_sensorinfohash->get((unsigned long) node, tmp)) {
+#endif
     assert(FALSE && "Trying to delete an unregistered SoNodeSensor. Internal error.");
     return;
   }
@@ -690,7 +697,11 @@ static void SFNode_deleteCB(void * COIN_UNUSED_ARG(data), SoSensor * sensor)
 
   // Store the sensor-pointer so that it can be properly deleted later
   nodesensorstobedeleted->append((SoNodeSensor *) sensor);
+#if defined(_WIN64)
+  CoinVrmlJs_sensorinfohash->erase((unsigned long long) node);
+#else
   CoinVrmlJs_sensorinfohash->erase((unsigned long) node);
+#endif
   delete si;
 }
 
@@ -1428,13 +1439,21 @@ static void attachSensorToNode(SoNode * node, JSObject * obj)
 {
   // Has the hash-table been initialized?
   if (!CoinVrmlJs_sensorinfohash) {
+#if defined(_WIN64)
+    CoinVrmlJs_sensorinfohash = new SbHash<unsigned long long, void *>;
+#else
     CoinVrmlJs_sensorinfohash = new SbHash<unsigned long, void *>;
+#endif
     coin_atexit(deleteSensorInfoHash, CC_ATEXIT_NORMAL);
   }
 
   // Is a sensor already attached to this SoNode?
   void * tmp;
+#if defined(_WIN64)
+  if (CoinVrmlJs_sensorinfohash->get((unsigned long long) node, tmp)) {
+#else
   if (CoinVrmlJs_sensorinfohash->get((unsigned long) node, tmp)) {
+#endif
     CoinVrmlJs_SensorInfo * si = (CoinVrmlJs_SensorInfo *) tmp;
     si->objects.append(obj);
   }
@@ -1444,7 +1463,11 @@ static void attachSensorToNode(SoNode * node, JSObject * obj)
     ns->attach(node);
     CoinVrmlJs_SensorInfo * si = new CoinVrmlJs_SensorInfo;
     si->objects.append(obj);
+#if defined(_WIN64)
+    CoinVrmlJs_sensorinfohash->put((unsigned long long) node, si);
+#else
     CoinVrmlJs_sensorinfohash->put((unsigned long) node, si);
+#endif
   }
 }
 

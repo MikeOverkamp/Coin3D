@@ -566,14 +566,14 @@ SoSTLFileKit::addFacet(const SbVec3f & v1, const SbVec3f & v2, const SbVec3f & v
     SO_GET_ANY_PART(this, "facets", SoIndexedFaceSet);
 
   // find existing indexes if any
-  long v1idx = PRIVATE(this)->points->findPoint(v1), v1new = (v1idx == -1);
-  long v2idx = PRIVATE(this)->points->findPoint(v2), v2new = (v2idx == -1);
-  long v3idx = PRIVATE(this)->points->findPoint(v3), v3new = (v3idx == -1);
-  if (!v1new) { v1idx = (long) PRIVATE(this)->points->getUserData(v1idx); }
-  if (!v2new) { v2idx = (long) PRIVATE(this)->points->getUserData(v2idx); }
-  if (!v3new) { v3idx = (long) PRIVATE(this)->points->getUserData(v3idx); }
-  long nidx = PRIVATE(this)->normals->findPoint(n);
-  if (nidx != -1) { nidx = (long) PRIVATE(this)->normals->getUserData(nidx); }
+  intmax_t v1idx = PRIVATE(this)->points->findPoint(v1), v1new = (v1idx == -1);
+  intmax_t v2idx = PRIVATE(this)->points->findPoint(v2), v2new = (v2idx == -1);
+  intmax_t v3idx = PRIVATE(this)->points->findPoint(v3), v3new = (v3idx == -1);
+  if (!v1new) { v1idx = (intmax_t) PRIVATE(this)->points->getUserData(v1idx); }
+  if (!v2new) { v2idx = (intmax_t) PRIVATE(this)->points->getUserData(v2idx); }
+  if (!v3new) { v3idx = (intmax_t) PRIVATE(this)->points->getUserData(v3idx); }
+  intmax_t nidx = PRIVATE(this)->normals->findPoint(n);
+  if (nidx != -1) { nidx = (intmax_t) PRIVATE(this)->normals->getUserData(nidx); }
 
   // toss out invalid facets - facets where two or more points are in
   // the same location.  what are these - are they lines and points or

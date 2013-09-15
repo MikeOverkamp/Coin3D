@@ -56,7 +56,7 @@ extern "C" {
    Structs and defines.
 */
 typedef int JSBool;
-typedef long jsword;
+typedef intmax_t jsword;
 typedef jsword jsval;
 typedef jsword jsid;
 typedef int intN;
