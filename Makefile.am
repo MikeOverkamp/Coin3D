@@ -1,5 +1,6 @@
 ###########################################################################
 ##
+ACLOCAL_AMFLAGS = -I cfg/m4
 
 if BUILD_LIBRARY
 SRCDIRS = data src

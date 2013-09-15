@@ -34,13 +34,13 @@ m4_define([MAC_FRAMEWORK_PREFIX_DEFAULT], [/Library/Frameworks])
 m4_define([MAC_FRAMEWORK_VERSION_DEFAULT], [C])
 
 # **************************************************************************
+AC_CONFIG_AUX_DIR(cfg)
 
-AC_PREREQ(2.50)
-
+AC_PREREQ(2.69)
 AC_INIT([Coin], [COIN_MAJOR.COIN_MINOR.COIN_MICRO[]COIN_BETA],
   [coin-support@coin3d.org])
 
-AC_CONFIG_AUX_DIR(cfg)
+AC_CONFIG_MACRO_DIR([cfg/m4])
 AC_CONFIG_SRCDIR(src/misc/SoDB.cpp)
 
 # FIXME: detect and exit upon this problem (as seen reported on
